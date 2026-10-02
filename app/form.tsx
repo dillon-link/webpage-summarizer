@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import { ExtractView } from "./components/extract-view";
+import { AnalysisView } from "./components/analysis-view";
+import { BriefingView } from "./components/briefing-view";
 
 type ExtractResult = {
   url: string;
@@ -182,25 +185,7 @@ export function Form() {
                 {analyzing ? "Analyzing" : "Analyze"}
               </button>
             </div>
-            {result ? (
-              <>
-                <h2 className="col-title">Extract</h2>
-                <p className="from">{result.url}</p>
-                <h3 className="col-title-row">{result.title}</h3>
-                <pre className="body">{result.text}</pre>
-                <div className="meta">
-                  <span>
-                    {result.chars.toLocaleString()} characters
-                    {result.truncated ? " · truncated" : ""}
-                  </span>
-                </div>
-              </>
-            ) : (
-              <div className="col-empty">
-                <h2 className="col-title">Extract</h2>
-                <p className="col-empty-text">Awaiting input.</p>
-              </div>
-            )}
+            <ExtractView result={result} />
           </article>
 
           <article className="col col-analyze">
@@ -263,86 +248,5 @@ export function Form() {
         </section>
       )}
     </>
-  );
-}
-
-function List({ items, title }: { items?: string[]; title: string }) {
-  if (!Array.isArray(items) || items.length === 0) return null;
-  return (
-    <>
-      <h3 className="section-title">{title}</h3>
-      <ul className="bullets">
-        {items.map((x, i) => (
-          <li key={i}>{x}</li>
-        ))}
-      </ul>
-    </>
-  );
-}
-
-function AnalysisView({ a }: { a: Analysis }) {
-  return (
-    <section className="analysis">
-      <h3 className="section-title">Subject</h3>
-      <p className="prose">{a.subject || a.page_type}</p>
-
-      {a.page_type && (
-        <>
-          <h3 className="section-title">Page type</h3>
-          <p className="prose">{a.page_type}</p>
-        </>
-      )}
-
-      {a.summary && (
-        <>
-          <h3 className="section-title">Summary</h3>
-          <p className="prose">{a.summary}</p>
-        </>
-      )}
-
-      <List items={a.key_information} title="Key information" />
-      <List items={a.people} title="People" />
-      <List items={a.organizations} title="Organizations" />
-      <List items={a.products_or_services} title="Products or services" />
-      <List items={a.topics} title="Topics" />
-      <List items={a.important_dates} title="Important dates" />
-      <List items={a.important_numbers} title="Important numbers" />
-      <List items={a.links} title="Links" />
-      <List
-        items={a.other_relevant_information}
-        title="Other relevant information"
-      />
-    </section>
-  );
-}
-
-function BriefingView({ b }: { b: Briefing }) {
-  const hasKeyPoints = Array.isArray(b.key_points) && b.key_points.length > 0;
-  const hasDetails = Array.isArray(b.details) && b.details.length > 0;
-  return (
-    <section className="analysis">
-      {b.title && <p className="prose briefing-title">{b.title}</p>}
-      {b.overview && <p className="prose">{b.overview}</p>}
-      {hasKeyPoints && (
-        <>
-          <h3 className="section-title">Most important points</h3>
-          <ul className="bullets">
-            {b.key_points.map((x, i) => (
-              <li key={i}>{x}</li>
-            ))}
-          </ul>
-        </>
-      )}
-      {hasDetails && (
-        <>
-          <h3 className="section-title">Important details</h3>
-          <ul className="bullets">
-            {b.details.map((x, i) => (
-              <li key={i}>{x}</li>
-            ))}
-          </ul>
-        </>
-      )}
-    </section>
   );
 }
