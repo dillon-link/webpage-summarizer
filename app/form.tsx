@@ -182,7 +182,7 @@ export function Form() {
                 disabled={!result || analyzing || briefingLoading}
                 className="ghost"
               >
-                {analyzing ? "Analyzing" : "Analyze"}
+                {analyzing ? "Analyzing" : "Analyze"} &rarr;
               </button>
             </div>
             <ExtractView result={result} />
@@ -196,7 +196,7 @@ export function Form() {
                 disabled={!analysis || briefingLoading}
                 className="ghost"
               >
-                {briefingLoading ? "Briefing" : "Brief"}
+                {briefingLoading ? "Briefing" : "Brief"} &rarr;
               </button>
             </div>
             {analysisError ? (
